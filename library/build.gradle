@@ -17,8 +17,19 @@ android {
         }
     }
 }
-
+repositories {
+    mavenLocal()
+    maven { url 'http://54.179.166.198:8081/nexus/content/repositories/thirdparty/' }
+    maven { url 'http://54.179.166.198:8081/nexus/content/repositories/snapshot/' }
+    maven { url 'http://54.179.166.198:8081/nexus/content/repositories/releases/' }
+    mavenCentral()
+}
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
+//    compile 'com.lidroid.xutils:xutils:2.6.14'
+}
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
