@@ -2,6 +2,7 @@ package com.liujigang.photowall;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Window;
 
 import com.liujigang.photowall.library.WallScrollView;
 
@@ -20,7 +21,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mWallScrollView.destory();
+        mWallScrollView.destroy();
         mWallScrollView = null;
     }
 }

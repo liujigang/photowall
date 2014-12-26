@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">library</string>
-    <string name="border_top">Border Top</string>
-    <string name="border_bottom">Border Bottom</string>
-    <string name="image_url">Image Url</string>
+    <string name="border_top">img_top</string>
+    <string name="border_bottom">img_bot</string>
+    <string name="image_url">img_url</string>
 </resources>

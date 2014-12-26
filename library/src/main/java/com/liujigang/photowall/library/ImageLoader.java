@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.util.LruCache;
+import android.widget.AbsListView;
 
 /**
  * 对图片进行管理的工具类。
@@ -27,9 +28,7 @@ public class ImageLoader {
     private ImageLoader() {
         // 获取应用程序最大可用内存
         int maxMemory = (int) Runtime.getRuntime().maxMemory();
-        Log.i("ImageLoader", "最大" + maxMemory);
-        int cacheSize = maxMemory / 8;// 设置图片缓存大小为程序最大可用内存的1/8
-        Log.i("ImageLoader", "最大" + cacheSize);
+        int cacheSize = maxMemory / 8;
         mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {
@@ -37,13 +36,15 @@ public class ImageLoader {
             }
 
             @Override
-            protected void entryRemoved(boolean evicted, String key,
-                                        Bitmap oldValue, Bitmap newValue) {
-                if (evicted) {
-                    Log.i("ImageLoader", "内存不足,移除图片");
-                    oldValue.recycle();
-                    oldValue = null;
-                }
+            protected synchronized void entryRemoved(boolean evicted, String key, Bitmap oldValue, Bitmap newValue) {
+                oldValue.recycle();
+                Log.i("ImageLoader", "内存中移除图片");
+                oldValue = null;
+//                if (evicted) {
+//                    Log.i("ImageLoader", "内存不足,移除图片");
+//                    oldValue.recycle();
+//                    oldValue = null;
+//                }
             }
 
         };
@@ -85,19 +86,15 @@ public class ImageLoader {
 
     public static int calculateInSampleSize(BitmapFactory.Options options,
                                             int reqWidth) {
-        // 源图片的宽度
         final int width = options.outWidth;
         int inSampleSize = 1;
         if (width > reqWidth) {
-            // 计算出实际宽度和目标宽度的比率
-            final int widthRatio = Math.round((float) width / (float) reqWidth);
-            inSampleSize = widthRatio;
+            inSampleSize = Math.round((float) width / (float) reqWidth);
         }
         return inSampleSize;
     }
 
-    public static Bitmap decodeSampledBitmapFromResource(String pathName,
-                                                         int reqWidth) {
+    public static Bitmap decodeSampledBitmapFromResource(String pathName,int reqWidth) {
         // 第一次解析将inJustDecodeBounds设置为true，来获取图片大小
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
